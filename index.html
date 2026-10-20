@@ -1,0 +1,419 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover" />
+  <meta name="theme-color" content="#090812" />
+  <meta name="apple-mobile-web-app-capable" content="yes" />
+  <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
+  <title>For My Sister — A Birthday Story</title>
+  <link rel="stylesheet" href="style.css" />
+  <!-- Google Fonts with offline fallbacks -->
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=DM+Sans:ital,wght@0,300;0,400;0,500;0,600;0,700;1,400&family=Playfair+Display:ital,wght@0,400;0,500;0,600;0,700;1,400;1,600&family=Alex+Brush&display=swap" rel="stylesheet" />
+</head>
+<body data-theme="galaxy">
+  <!-- Dynamic Atmospheric Background Layers -->
+  <div class="theme-bg" id="themeBg" aria-hidden="true"></div>
+  <div class="theme-overlay" aria-hidden="true"></div>
+  <div class="grain" aria-hidden="true"></div>
+  <div class="ambient ambient-one" aria-hidden="true"></div>
+  <div class="ambient ambient-two" aria-hidden="true"></div>
+  <div id="stars" class="stars" aria-hidden="true"></div>
+  <canvas id="fireworksCanvas" class="fireworks-canvas" aria-hidden="true"></canvas>
+
+  <!-- Cinematic Transition Overlays -->
+  <div id="cinematicWipe" class="cinematic-wipe" aria-hidden="true"></div>
+  <div id="vignettePulse" class="vignette-pulse" aria-hidden="true"></div>
+
+  <!-- Autoplay Enable Banner (Appears if browser holds back sound until first tap) -->
+  <div id="autoplayBanner" class="autoplay-banner" role="button" tabindex="0" title="Tap to start background music">
+    <div class="autoplay-pulse">♫</div>
+    <span>Tap anywhere to play with music</span>
+    <button class="autoplay-dismiss" aria-label="Dismiss banner">✕</button>
+  </div>
+
+  <!-- Top Navigation Bar -->
+  <header class="topbar">
+    <div class="brand">
+      <span class="brand-sparkle">✦</span>
+      <span class="brand-title">OUR LITTLE UNIVERSE</span>
+      <span class="brand-badge">SISTER SPECIAL</span>
+    </div>
+
+    <div class="top-actions">
+      <!-- Theme Switcher Dropdown -->
+      <div class="theme-picker-wrap">
+        <button id="themeButton" class="icon-button" type="button" title="Select visual theme" aria-expanded="false" aria-haspopup="true">
+          <span class="btn-icon">🎨</span>
+          <span class="btn-label">Theme</span>
+        </button>
+        <div id="themeDropdown" class="theme-dropdown" role="menu">
+          <div class="theme-dropdown-header">Choose Ambiance</div>
+          <button class="theme-option active" data-theme="galaxy" data-bg="assets/themes/01_cosmic_galaxy.jpg">
+            <span class="theme-dot" style="background:#4b3ca7;"></span> Cosmic Galaxy
+          </button>
+          <button class="theme-option" data-theme="golden" data-bg="assets/themes/03_golden_bokeh.jpg">
+            <span class="theme-dot" style="background:#e9c987;"></span> Golden Bokeh
+          </button>
+          <button class="theme-option" data-theme="cherry" data-bg="assets/themes/18_cherry_blossoms.jpg">
+            <span class="theme-dot" style="background:#f4a6c0;"></span> Cherry Blossoms
+          </button>
+          <button class="theme-option" data-theme="aurora" data-bg="assets/themes/02_emerald_aurora.jpg">
+            <span class="theme-dot" style="background:#2fc7a3;"></span> Emerald Aurora
+          </button>
+          <button class="theme-option" data-theme="roses" data-bg="assets/themes/09_velvet_roses.jpg">
+            <span class="theme-dot" style="background:#c93b67;"></span> Velvet Roses
+          </button>
+          <button class="theme-option" data-theme="fireworks" data-bg="assets/themes/07_fireworks_night.jpg">
+            <span class="theme-dot" style="background:#f97316;"></span> Fireworks Night
+          </button>
+          <button class="theme-option" data-theme="butterflies" data-bg="assets/themes/21_glowing_butterflies.jpg">
+            <span class="theme-dot" style="background:#38bdf8;"></span> Glowing Butterflies
+          </button>
+          <button class="theme-option" data-theme="lanterns" data-bg="assets/themes/10_sunset_lanterns.jpg">
+            <span class="theme-dot" style="background:#f59e0b;"></span> Sunset Lanterns
+          </button>
+        </div>
+      </div>
+
+      <!-- Music Playback & Visualizer Button -->
+      <div class="audio-control-wrap">
+        <button id="musicButton" class="icon-button" type="button" title="Play / Pause background music">
+          <span class="sound-wave" id="soundWave" aria-hidden="true">
+            <span></span><span></span><span></span><span></span>
+          </span>
+          <span class="btn-label" id="musicStatusText">Play Song</span>
+        </button>
+      </div>
+
+      <!-- Fullscreen Toggle -->
+      <button id="fullscreenButton" class="icon-button" type="button" title="Toggle Fullscreen cinematic view">
+        <span class="btn-icon">⛶</span>
+        <span class="btn-label">Fullscreen</span>
+      </button>
+    </div>
+  </header>
+
+  <!-- Main Multi-Scene Stage -->
+  <main id="sceneContainer">
+
+    <!-- Scene 0: Prologue & Intro -->
+    <section class="screen intro active" data-scene="0">
+      <div class="screen-scroll-wrap">
+        <div class="intro-orbits-wrap" aria-hidden="true">
+          <div class="intro-orbit orbit-a"></div>
+          <div class="intro-orbit orbit-b"></div>
+          <div class="intro-orbit orbit-c"></div>
+        </div>
+        <p class="eyebrow reveal">A SPECIAL SURPRISE · CRAFTED WITH LOVE</p>
+        <h1 class="hero-title reveal">
+          For my <em>forever</em><br/>favorite person.
+        </h1>
+        <p class="hero-subtitle reveal">A cinematic birthday journey for my sweetest sister</p>
+        
+        <div class="heart-pulse-container reveal">
+          <div class="heart-pulse" title="With all my love">♡</div>
+          <div class="heart-glow"></div>
+        </div>
+
+        <div class="hero-actions reveal">
+          <button class="primary-button magic-btn" id="beginButton">
+            <span>Begin the Magic</span>
+            <span class="btn-arrow">→</span>
+          </button>
+          <button class="secondary-button movie-btn" id="movieModeButton">
+            <span class="btn-icon">▶</span>
+            <span>Movie Mode (Auto-Play)</span>
+          </button>
+        </div>
+        <p class="tiny-note">Turn on sound & enjoy every cherished moment together.</p>
+      </div>
+    </section>
+
+    <!-- Scene 1: Chapter One · Our Bond (Siblings Portrait - Face-Safe Framing) -->
+    <section class="screen photo-scene" data-scene="1">
+      <div class="scene-inner">
+        <div class="photo-card-wrap">
+          <div class="photo-ambient-blur" style="background-image: url('assets/images/siblings-photo.jpeg');" aria-hidden="true"></div>
+          <div class="photo-frame frame-portrait" data-photo="siblings">
+            <div class="photo-frame-inner">
+              <img src="assets/images/siblings-photo.jpeg" alt="Cherished photo of brother and sister" class="face-safe-img photo-siblings" loading="eager" />
+            </div>
+            <div class="photo-shine"></div>
+            <button class="photo-expand-btn" title="View Full Photo" aria-label="Expand photo">🔍</button>
+          </div>
+        </div>
+        <div class="scene-copy">
+          <p class="eyebrow">CHAPTER ONE · OUR BOND</p>
+          <h2>A bond beyond <em>words.</em></h2>
+          <p>Some people make life infinitely warmer and brighter just by being in it. Through all our laughs, secret jokes, and everyday adventures, having you as my sister is the greatest gift of all.</p>
+          <blockquote>“Different hearts, one unbreakable bond, and a lifetime of memories to cherish forever.”</blockquote>
+          <div class="scene-tag">✦ SIBLING LOVE · FOREVER & ALWAYS</div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Scene 2: Chapter Two · Family Love (Mother & Daughter Landscape - Wide Face-Safe Frame) -->
+    <section class="screen photo-scene reverse" data-scene="2">
+      <div class="scene-inner">
+        <div class="photo-card-wrap">
+          <div class="photo-ambient-blur" style="background-image: url('assets/images/mother-daughter.png');" aria-hidden="true"></div>
+          <div class="photo-frame frame-landscape" data-photo="mother-daughter">
+            <div class="photo-frame-inner">
+              <img src="assets/images/mother-daughter.png" alt="A mother and daughter sharing a warm loving moment" class="face-safe-img photo-mother-daughter" loading="eager" />
+            </div>
+            <div class="photo-shine"></div>
+            <button class="photo-expand-btn" title="View Full Photo" aria-label="Expand photo">🔍</button>
+          </div>
+        </div>
+        <div class="scene-copy">
+          <p class="eyebrow">CHAPTER TWO · FAMILY LOVE</p>
+          <h2>Love that feels like <em>home.</em></h2>
+          <p>A mother and daughter, two pure hearts bound by unconditional love and boundless grace. In her warm embrace and gentle smile lies a safe sanctuary that never fades.</p>
+          <blockquote>“Her first home, her forever love — Mom and daughter, an eternal circle of affection.”</blockquote>
+          <div class="scene-tag">✦ FAMILY BLESSING · UNCONDITIONAL LOVE</div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Scene 3: Chapter Three · Little Details (Traditional Portrait - Face-Safe Slim Frame) -->
+    <section class="screen photo-scene" data-scene="3">
+      <div class="scene-inner">
+        <div class="photo-card-wrap">
+          <div class="photo-ambient-blur" style="background-image: url('assets/images/traditional-portrait.png');" aria-hidden="true"></div>
+          <div class="photo-frame frame-tall" data-photo="traditional">
+            <div class="photo-frame-inner">
+              <img src="assets/images/traditional-portrait.png" alt="Traditional portrait of sister in elegant attire" class="face-safe-img photo-traditional" loading="eager" />
+            </div>
+            <div class="photo-shine"></div>
+            <button class="photo-expand-btn" title="View Full Photo" aria-label="Expand photo">🔍</button>
+          </div>
+        </div>
+        <div class="scene-copy">
+          <p class="eyebrow">CHAPTER THREE · LITTLE DETAILS</p>
+          <h2>Elegance in every <em>moment.</em></h2>
+          <p>A beautiful soul dressed in tradition, carrying timeless poise, dignity, and radiant grace in every little detail and gentle smile.</p>
+          <blockquote>“Elegance is not just how you look, but the kindness, warmth, and light you carry within.”</blockquote>
+          <div class="scene-tag">✦ TIMELESS GRACE · RADIANT POISE</div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Scene 4: Chapter Four · Golden Moments (Golden Lights Widescreen 16:9 - Face-Safe Frame) -->
+    <section class="screen photo-scene reverse" data-scene="4">
+      <div class="scene-inner">
+        <div class="photo-card-wrap">
+          <div class="photo-ambient-blur" style="background-image: url('assets/images/golden-lights.png');" aria-hidden="true"></div>
+          <div class="photo-frame frame-wide" data-photo="golden-lights">
+            <div class="photo-frame-inner">
+              <img src="assets/images/golden-lights.png" alt="Sister surrounded by enchanting golden lights" class="face-safe-img photo-golden" loading="eager" />
+            </div>
+            <div class="photo-shine"></div>
+            <button class="photo-expand-btn" title="View Full Photo" aria-label="Expand photo">🔍</button>
+          </div>
+        </div>
+        <div class="scene-copy">
+          <p class="eyebrow">CHAPTER FOUR · GOLDEN MOMENTS</p>
+          <h2>Lost in the magic of <em>lights.</em></h2>
+          <p>A quiet evening glowing with golden lanterns and warm dreams. In that tender stillness, the world slows down and happiness feels so simple and true.</p>
+          <blockquote>“Some moments shine brighter than the stars and remain forever illuminated in our memories.”</blockquote>
+          <div class="scene-tag">✦ GOLDEN MEMORIES · WARM AMBIANCE</div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Scene 5: Chapter Five · Your Own Light (Peaceful Moment Landscape - Face-Safe Frame) -->
+    <section class="screen photo-scene" data-scene="5">
+      <div class="scene-inner">
+        <div class="photo-card-wrap">
+          <div class="photo-ambient-blur" style="background-image: url('assets/images/peaceful-moment.png');" aria-hidden="true"></div>
+          <div class="photo-frame frame-landscape" data-photo="peaceful">
+            <div class="photo-frame-inner">
+              <img src="assets/images/peaceful-moment.png" alt="Sister in a serene, peaceful moment with gentle smile" class="face-safe-img photo-peaceful" loading="eager" />
+            </div>
+            <div class="photo-shine"></div>
+            <button class="photo-expand-btn" title="View Full Photo" aria-label="Expand photo">🔍</button>
+          </div>
+        </div>
+        <div class="scene-copy">
+          <p class="eyebrow">CHAPTER FIVE · YOUR OWN LIGHT</p>
+          <h2>A moment of <em>serenity.</em></h2>
+          <p>A calm gaze, a gentle smile, and a heart brimming with authentic hopes. Your peace of mind and peaceful spirit inspire everyone who is lucky to know you.</p>
+          <blockquote>“Finding beauty in the simplest moments and discovering endless strength in being yourself.”</blockquote>
+          <div class="scene-tag">✦ INNER PEACE · RADIANT SPIRIT</div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Scene 6: Interactive Secret Surprise Gift Box (From Concept Art) -->
+    <section class="screen gift-scene" data-scene="6">
+      <div class="screen-scroll-wrap">
+        <div class="gift-glow" aria-hidden="true"></div>
+        <div class="gift-box-wrapper">
+          <p class="eyebrow">SECRET SURPRISE · UNWRAP ME</p>
+          <h2>A little surprise for <em>you.</em></h2>
+          <p class="gift-instruction">Click the magic gift box to unwrap your special birthday surprise!</p>
+          
+          <div class="gift-3d-box" id="giftBox" role="button" tabindex="0" title="Click to open your gift">
+            <div class="gift-lid" id="giftLid">
+              <div class="gift-bow">
+                <span class="bow-loop left"></span>
+                <span class="bow-loop right"></span>
+                <span class="bow-center">✦</span>
+              </div>
+              <div class="gift-ribbon-horizontal"></div>
+            </div>
+            <div class="gift-body">
+              <div class="gift-ribbon-vertical"></div>
+              <div class="gift-sparkles" aria-hidden="true">
+                <span>✨</span><span>⭐</span><span>💖</span><span>🎉</span>
+              </div>
+            </div>
+          </div>
+
+          <!-- Hidden Card revealed upon opening the gift -->
+          <div class="gift-reveal-card" id="giftReveal">
+            <div class="reveal-badge">SPECIAL WISH</div>
+            <h3>You Are Truly One in a Million!</h3>
+            <p>No matter where life leads us, may every path you walk be covered with roses, every challenge turn into a victory, and every dream you hold secretly come true!</p>
+            <div class="gift-confetti-btn-wrap">
+              <button class="primary-button small-btn" id="confettiBurstBtn">Shower More Confetti! 🎊</button>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Scene 7: Emotional Letter Scene -->
+    <section class="screen letter-scene" data-scene="7">
+      <div class="screen-scroll-wrap">
+        <div class="letter-glow" aria-hidden="true"></div>
+        <div class="letter-card">
+          <div class="letter-stamp" title="Sealed with Love">
+            <span class="stamp-heart">♡</span>
+            <span class="stamp-ring"></span>
+          </div>
+          <p class="eyebrow">A LETTER FROM MY HEART</p>
+          <h2>To my dearest <em>sister,</em></h2>
+          <div class="letter-body">
+            <p class="letter-text">
+              You are much more than a sister; you are a priceless blessing, a confidante, and a source of constant joy in my life.
+            </p>
+            <p class="letter-text">
+              Watching you grow into such a graceful, thoughtful, and incredible woman fills my heart with tremendous pride. No matter how many years pass or how busy the world gets, you will always have my love, my support, and my unwavering presence.
+            </p>
+            <p class="letter-highlight">Happy Birthday to my sweetest, most precious sister! 🎂✨</p>
+            <p class="signature">
+              With all my love, today and for all tomorrows
+              <span class="signature-heart">♡</span>
+            </p>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Scene 8: Constellation & Grand Finale -->
+    <section class="screen finale-scene" data-scene="8">
+      <div class="screen-scroll-wrap">
+        <div class="constellation" aria-hidden="true">
+          <span class="star s1" title="Star 1"></span>
+          <span class="star s2" title="Star 2"></span>
+          <span class="star s3" title="Star 3"></span>
+          <span class="star s4" title="Star 4"></span>
+          <span class="star s5" title="Star 5"></span>
+          <span class="star s6" title="Star 6"></span>
+          <span class="star s7" title="Star 7"></span>
+          <svg viewBox="0 0 600 260" preserveAspectRatio="xMidYMid meet">
+            <path class="const-path" d="M60 170 L140 70 L210 135 L285 40 L370 115 L450 50 L530 140" />
+            <path class="const-path-sub" d="M140 70 L160 200 L285 40 L315 200 L450 50 L470 190" />
+          </svg>
+        </div>
+
+        <p class="eyebrow">UNDER THE SAME BEAUTIFUL SKY</p>
+        <h2 class="finale-title">
+          To my sister,<br/><em>my forever star.</em>
+        </h2>
+        <p class="final-message">
+          Just like the brightest stars that illuminate the boundless night sky, your warmth, kindness, and laughter illuminate everything around you. May this upcoming year bring you immense blessings, pure happiness, and fulfilled dreams!
+        </p>
+
+        <div class="wish-cloud">
+          <span class="wish-pill">✨ Endless Laughter</span>
+          <span class="wish-pill">🌸 Beautiful Dreams</span>
+          <span class="wish-pill">💖 Boundless Love</span>
+          <span class="wish-pill">🌟 Good Health & Peace</span>
+          <span class="wish-pill">🎯 Grand Success</span>
+          <span class="wish-pill">👭 Sisterhood Forever</span>
+          <span class="wish-pill">🎉 Infinite Joy</span>
+        </div>
+
+        <div class="final-heart" title="Forever in my heart">♥</div>
+        <p class="final-signature">Happy Birthday, my sweetest sister! <span>✦</span></p>
+
+        <div class="finale-actions">
+          <button class="primary-button replay-button" id="replayButton">
+            <span>Watch Our Story Again</span> ↻
+          </button>
+          <button class="secondary-button" id="fireworksBlastBtn">
+            <span>Launch Fireworks</span> 🎆
+          </button>
+        </div>
+      </div>
+    </section>
+
+  </main>
+
+  <!-- Bottom Navigation & Cinematic Timeline Controls -->
+  <footer class="controls">
+    <!-- Chapter timeline dots -->
+    <div class="chapter-dots" id="chapterDots" aria-label="Scene selection">
+      <!-- Generated via JS -->
+    </div>
+
+    <!-- Smooth Progress Bar -->
+    <div class="progress-wrap" title="Story progress">
+      <div id="progress" class="progress"></div>
+    </div>
+
+    <div class="control-row">
+      <div class="scene-counter-wrap">
+        <span id="sceneCounter" class="counter-text">01 / 09</span>
+        <span id="sceneTitle" class="scene-title-badge">Prologue</span>
+      </div>
+
+      <div class="nav-buttons">
+        <button id="prevButton" class="round-button" aria-label="Previous scene" title="Previous scene (Left Arrow)">←</button>
+        <button id="playButton" class="round-button play-button" aria-label="Play or pause slideshow" title="Play / Pause slideshow (Spacebar)">▶</button>
+        <button id="nextButton" class="round-button" aria-label="Next scene" title="Next scene (Right Arrow)">→</button>
+      </div>
+
+      <div class="control-extra">
+        <span class="keyboard-hint">SPACE to pause · ← → to navigate</span>
+      </div>
+    </div>
+  </footer>
+
+  <!-- Lightbox Modal for Full Uncropped Photo Inspection -->
+  <div id="lightboxModal" class="lightbox-modal" role="dialog" aria-hidden="true" aria-label="Full Photo View">
+    <div class="lightbox-backdrop"></div>
+    <div class="lightbox-content">
+      <button id="lightboxClose" class="lightbox-close" aria-label="Close modal">✕</button>
+      <div class="lightbox-img-wrap">
+        <img id="lightboxImg" src="" alt="Full view" />
+      </div>
+      <p id="lightboxCaption" class="lightbox-caption"></p>
+    </div>
+  </div>
+
+  <!-- Audio Player (Loaded with the provided song) -->
+  <audio id="backgroundMusic" src="assets/audio/birthday_song.mp3" preload="auto" loop></audio>
+  <input id="musicInput" type="file" accept="audio/*" hidden />
+
+  <!-- Toast Notification element -->
+  <div id="toast" class="toast" role="status" aria-live="polite"></div>
+
+  <script src="script.js"></script>
+</body>
+</html>
